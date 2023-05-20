@@ -1,0 +1,25 @@
+{
+  "project_name": "Example Haskell Wheel",
+  "project_slug": "{{cookiecutter.project_name | slugify}}",
+  "__project_slug_camelcase": "{{cookiecutter.project_slug | to_pascal}}",
+  "__project_slug_snakecase": "{{cookiecutter.project_name | slugify(separator='_')}}",
+  "fullname": "{{None | resolve_fullname}}",
+  "email": "{{None | resolve_email}}",
+  "github": null,
+  "repository_slug": "{{cookiecutter.project_slug}}",
+  "version": "0.1.0",
+  "license": ["MIT", "PPL"],
+  "source_directory": "src",
+  "test_directory": "tests",
+  "use_git_init": ["github", "n"],
+  "__github_remote_url": "git@github.com:{{cookiecutter.github}}/{{cookiecutter.repository_slug}}.git",
+  "use_pre_commit": "y",
+  "date": "{% now 'local' %}",
+  "year": "{% now 'local', '%Y' %}",
+  "_extensions": [
+    "jinja2_time.TimeExtension",
+    "local_extensions.GitConfigExtension",
+    "local_extensions.StrCaseExtension",
+    "local_extensions.VersionExtension"
+  ]
+}

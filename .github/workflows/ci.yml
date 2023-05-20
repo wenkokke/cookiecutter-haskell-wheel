@@ -1,0 +1,159 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  merge_group:
+
+  schedule:
+    #        ┌───────────── minute (0 - 59)
+    #        │ ┌───────────── hour (0 - 23)
+    #        │ │ ┌───────────── day of the month (1 - 31)
+    #        │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+    #        │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+    #        │ │ │ │ │
+    #        │ │ │ │ │
+    #        │ │ │ │ │
+    - cron: "0 0 * * 0"
+
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: sh
+
+env:
+  # The upstream version
+  REFERENCE_VERSION: "1.0.1"
+
+  DEFAULT_GHC_VERSION: "9.4.4"
+  DEFAULT_CABAL_VERSION: "3.10.1.0"
+  DEFAULT_PYTHON_VERSION: "3.11"
+
+jobs:
+  ################################################################################
+  # Compare with upstream
+  ################################################################################
+
+  diff:
+    name: "Compare with upstream"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: "./template"
+
+      - # Required to run job via act: https://github.com/nektos/act
+        uses: actions/setup-python@v4
+        with:
+          cache: "pip"
+          cache-dependency-path: "./template/requirements-ci.txt"
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
+
+      - # Required to run job via act: https://github.com/nektos/act
+        run: pip install -r "./template/requirements-ci.txt"
+
+      - run: |
+          pipx run cookiecutter                       \
+            --no-input                                \
+            "./template"                              \
+            --output-dir "./actual"                   \
+            project_name="Example Haskell Wheel"      \
+            project_slug="example-haskell-wheel"      \
+            fullname="Wen Kokke"                      \
+            email="wenkokke@users.noreply.github.com" \
+            github="wenkokke"                         \
+            version="${{ env.REFERENCE_VERSION }}"    \
+            license="MIT"                             \
+            source_directory="src"                    \
+            test_directory="tests"                    \
+            use_git_init="n"                          \
+            use_pre_commit="y"                        \
+            year="2023"
+
+      - uses: actions/checkout@v3
+        with:
+          repository: "wenkokke/example-haskell-wheel"
+          ref: "v${{ env.REFERENCE_VERSION }}"
+          path: "./golden/example-haskell-wheel"
+
+      - run: |
+          diff \
+            --recursive \
+            --exclude=".git" \
+            --exclude-from="./actual/example-haskell-wheel/.gitignore" \
+            "./actual/example-haskell-wheel" \
+            "./golden/example-haskell-wheel"
+
+  ################################################################################
+  # Test generated package with Tox
+  ################################################################################
+
+  test:
+    name: Test / ${{ matrix.os.name }}
+    runs-on: ${{ matrix.os.type }}
+
+    strategy:
+      matrix:
+        os:
+          - name: "Linux"
+            type: "ubuntu-latest"
+          - name: "macOS"
+            type: "macos-latest"
+          - name: "Windows"
+            type: "windows-latest"
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: "./template"
+
+      - # Required to run job via act: https://github.com/nektos/act
+        uses: actions/setup-python@v4
+        with:
+          cache: "pip"
+          cache-dependency-path: "./template/requirements-ci.txt"
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
+
+      - # Required to run job via act: https://github.com/nektos/act
+        run: pip install -r "./template/requirements-ci.txt"
+
+      - # 19-05-2023:
+        # Required to build the wheels on macOS and Windows, but not on Linux,
+        # as Linux builds are run in containers, where GHC and Cabal are built
+        # by the `./scripts/before-all.sh` scripts.
+        if: runner.os == 'macOS' || runner.os == 'Windows'
+        uses: haskell/actions/setup@v2
+        with:
+          ghc-version: ${{ env.DEFAULT_GHC_VERSION }}
+          cabal-version: ${{ env.DEFAULT_CABAL_VERSION }}
+
+      - run: |
+          pipx run cookiecutter                       \
+            --no-input                                \
+            "./template"                              \
+            --output-dir "./actual"                   \
+            project_name="Does Haskell Fib"           \
+            project_slug="does-haskell-fib"           \
+            fullname="Clever Pseudonym"               \
+            email="clever@pseudonym.me"               \
+            github="pseudonym"                        \
+            version="1.1.2"                           \
+            license="PPL"                             \
+            source_directory="source"                 \
+            test_directory="test"                     \
+            use_git_init="n"                          \
+            use_pre_commit="y"                        \
+            year="1917"
+
+      - run: pipx run tox run -e py311
+        working-directory: "./actual/does-haskell-fib"
