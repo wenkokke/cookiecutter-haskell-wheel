@@ -1,25 +1,25 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# OPTIONS_GHC -Wall #-}
 
-module ExampleHaskellWheel.Binding where
+module {{cookiecutter.__project_slug_camelcase}}.Binding where
 
 import Control.Monad (forM_)
 import Data.Version (showVersion)
 import Foreign.C.String (CString, newCString)
-import Paths_example_haskell_wheel (version)
+import Paths_{{cookiecutter.__project_slug_snakecase}} (version)
 import System.Environment (getArgs)
 import Text.Read (readMaybe)
 
-foreign export ccall hs_example_haskell_wheel_version :: IO CString
+foreign export ccall hs_{{cookiecutter.__project_slug_snakecase}}_version :: IO CString
 
-hs_example_haskell_wheel_version :: IO CString
-hs_example_haskell_wheel_version =
+hs_{{cookiecutter.__project_slug_snakecase}}_version :: IO CString
+hs_{{cookiecutter.__project_slug_snakecase}}_version =
   newCString (showVersion version)
 
-foreign export ccall hs_example_haskell_wheel_main :: IO ()
+foreign export ccall hs_{{cookiecutter.__project_slug_snakecase}}_main :: IO ()
 
-hs_example_haskell_wheel_main :: IO ()
-hs_example_haskell_wheel_main =
+hs_{{cookiecutter.__project_slug_snakecase}}_main :: IO ()
+hs_{{cookiecutter.__project_slug_snakecase}}_main =
   getArgs >>= \args ->
     forM_ args $ \arg -> do
       case readMaybe arg of

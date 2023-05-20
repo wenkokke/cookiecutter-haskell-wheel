@@ -1,13 +1,13 @@
 %module binding
 %{
-#include "ExampleHaskellWheel/Binding_stub.h"
+#include "{{cookiecutter.__project_slug_camelcase}}/Binding_stub.h"
 
-char * unsafe_hs_example_haskell_wheel_version() {
-  return hs_example_haskell_wheel_version();
+char * unsafe_hs_{{cookiecutter.__project_slug_snakecase}}_version() {
+  return hs_{{cookiecutter.__project_slug_snakecase}}_version();
 }
 
-void unsafe_hs_example_haskell_wheel_main() {
-  hs_example_haskell_wheel_main();
+void unsafe_hs_{{cookiecutter.__project_slug_snakecase}}_main() {
+  hs_{{cookiecutter.__project_slug_snakecase}}_main();
 }
 
 void unsafe_hs_init(int argc, char **argv) {
@@ -45,7 +45,7 @@ void unsafe_hs_exit() {
   free((char *) $2);
 }
 
-char * unsafe_hs_example_haskell_wheel_version();
-void unsafe_hs_example_haskell_wheel_main();
+char * unsafe_hs_{{cookiecutter.__project_slug_snakecase}}_version();
+void unsafe_hs_{{cookiecutter.__project_slug_snakecase}}_main();
 void unsafe_hs_init(int argc, char **argv);
 void unsafe_hs_exit();

@@ -1,14 +1,14 @@
 cabal-version:   3.0
-name:            example-haskell-wheel
-version:         1.1.0
+name:            {{cookiecutter.project_slug}}
+version:         {{cookiecutter.version}}
 description:
   An experiment in publishing a Haskell library as a Python Wheel.
 
 license:         MIT
 license-file:    LICENSE
-author:          Wen Kokke
-maintainer:      wenkokke@users.noreply.github.com
-copyright:       (c) 2023 Wen Kokke
+author:          {{cookiecutter.fullname}}
+maintainer:      {{cookiecutter.email}}
+copyright:       (c) 2023 {{cookiecutter.fullname}}
 build-type:      Custom
 extra-doc-files: CHANGELOG.md
 
@@ -33,13 +33,13 @@ foreign-library _binding
 
   if os(windows)
     options:      standalone
-    mod-def-file: src/example_haskell_wheel/binding.def
+    mod-def-file: {{cookiecutter.source_directory}}/{{cookiecutter.__project_slug_snakecase}}/binding.def
 
-  c-sources:        src/example_haskell_wheel/binding_wrap.c
-  hs-source-dirs:   src
+  c-sources:        {{cookiecutter.source_directory}}/{{cookiecutter.__project_slug_snakecase}}/binding_wrap.c
+  hs-source-dirs:   {{cookiecutter.source_directory}}
   other-modules:
-    ExampleHaskellWheel.Binding
-    Paths_example_haskell_wheel
+    {{cookiecutter.__project_slug_camelcase}}.Binding
+    Paths_{{cookiecutter.__project_slug_snakecase}}
 
   build-depends:    base >=4.7 && <5
   default-language: Haskell2010

@@ -1,7 +1,7 @@
 cradle:
   multi:
 
-    - path: "./src"
+    - path: "./{{cookiecutter.source_directory}}"
       config:
         cradle:
           cabal:

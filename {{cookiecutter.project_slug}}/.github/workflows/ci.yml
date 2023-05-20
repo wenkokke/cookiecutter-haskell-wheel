@@ -71,7 +71,7 @@ jobs:
         with:
           cache: "pip"
           cache-dependency-path: "./requirements-ci.txt"
-          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
+          python-version: {{'${{ env.DEFAULT_PYTHON_VERSION }}'}}
 
       - # Required to run job via act: https://github.com/nektos/act
         run: pip install -r "./requirements-ci.txt"
@@ -83,8 +83,8 @@ jobs:
         if: matrix.os.name == 'macOS' || matrix.os.name == 'Windows'
         uses: haskell/actions/setup@v2
         with:
-          ghc-version: ${{ env.DEFAULT_GHC_VERSION }}
-          cabal-version: ${{ env.DEFAULT_CABAL_VERSION }}
+          ghc-version: {{'${{ env.DEFAULT_GHC_VERSION }}'}}
+          cabal-version: {{'${{ env.DEFAULT_CABAL_VERSION }}'}}
 
       - # 19-06-2023:
         # Required to build aarch64 wheels.
@@ -120,8 +120,8 @@ jobs:
   ################################################################################
 
   test:
-    name: Test / ${{ matrix.os.name }}
-    runs-on: ${{ matrix.os.type }}
+    name: Test / {{'${{ matrix.os.name }}'}}
+    runs-on: {{'${{ matrix.os.type }}'}}
 
     strategy:
       matrix:
@@ -158,8 +158,8 @@ jobs:
         if: matrix.os.name == 'macOS' || matrix.os.name == 'Windows'
         uses: haskell/actions/setup@v2
         with:
-          ghc-version: ${{ env.DEFAULT_GHC_VERSION }}
-          cabal-version: ${{ env.DEFAULT_CABAL_VERSION }}
+          ghc-version: {{'${{ env.DEFAULT_GHC_VERSION }}'}}
+          cabal-version: {{'${{ env.DEFAULT_CABAL_VERSION }}'}}
 
       - run: pipx run tox
 
@@ -201,7 +201,7 @@ jobs:
 
     environment:
       name: pypi
-      url: https://pypi.org/p/example-haskell-wheel
+      url: https://pypi.org/p/{{cookiecutter.project_slug}}
 
     permissions:
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing

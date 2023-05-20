@@ -1,6 +1,6 @@
 # Specific to this project
-/src/example_haskell_wheel/binding.py
-/src/example_haskell_wheel/binding_wrap.c
+/{{cookiecutter.source_directory}}/{{cookiecutter.__project_slug_snakecase}}/binding.py
+/{{cookiecutter.source_directory}}/{{cookiecutter.__project_slug_snakecase}}/binding_wrap.c
 
 # Haskell
 dist

@@ -8,8 +8,8 @@ from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
 ext_module = Extension(
-    name="example_haskell_wheel._binding",
-    sources=["src/example_haskell_wheel/binding.i"],
+    name="{{cookiecutter.__project_slug_snakecase}}._binding",
+    sources=["{{cookiecutter.source_directory}}/{{cookiecutter.__project_slug_snakecase}}/binding.i"],
 )
 
 

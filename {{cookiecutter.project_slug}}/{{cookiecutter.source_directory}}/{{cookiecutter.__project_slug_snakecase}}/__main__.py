@@ -1,9 +1,9 @@
 import sys
-import example_haskell_wheel
+import {{cookiecutter.__project_slug_snakecase}}
 
 
 def main() -> None:
-    example_haskell_wheel.main(sys.argv)
+    {{cookiecutter.__project_slug_snakecase}}.main(sys.argv)
 
 
 if __name__ == "__main__":

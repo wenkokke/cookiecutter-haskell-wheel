@@ -1,19 +1,19 @@
 from typing import List
 
 from ._binding import (
-    unsafe_hs_example_haskell_wheel_version,
-    unsafe_hs_example_haskell_wheel_main,
+    unsafe_hs_{{cookiecutter.__project_slug_snakecase}}_version,
+    unsafe_hs_{{cookiecutter.__project_slug_snakecase}}_main,
     unsafe_hs_init,
     unsafe_hs_exit,
 )
 
-VERSION: str = "1.1.0"
+VERSION: str = "{{cookiecutter.version}}"
 
 
 def version() -> str:
     try:
         unsafe_hs_init([])
-        return str(unsafe_hs_example_haskell_wheel_version())
+        return str(unsafe_hs_{{cookiecutter.__project_slug_snakecase}}_version())
     finally:
         unsafe_hs_exit()
 
@@ -21,6 +21,6 @@ def version() -> str:
 def main(args: List[str]) -> None:
     try:
         unsafe_hs_init(args)
-        unsafe_hs_example_haskell_wheel_main()
+        unsafe_hs_{{cookiecutter.__project_slug_snakecase}}_main()
     finally:
         unsafe_hs_exit()

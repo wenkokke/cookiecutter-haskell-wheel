@@ -1,4 +1,4 @@
-# Revision history for example-haskell-wheel
+# Revision history for {{cookiecutter.project_slug}}
 
 ## 0.1.0 -- 2023-04-01
 
